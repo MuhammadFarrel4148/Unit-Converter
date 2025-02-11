@@ -9,6 +9,14 @@ const lengthConversion = {
     'mile': 1609344,
 };
 
-module.exports = { lengthConversion };
+const weightConversion = {
+    'mg': 1,
+    'g': 1000,
+    'kg': 1000000,
+    'oz': 28349.52,
+    'lb': 453592.37,
+};
+
+module.exports = { lengthConversion, weightConversion };
 
 
