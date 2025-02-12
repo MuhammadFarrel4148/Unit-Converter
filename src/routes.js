@@ -1,4 +1,4 @@
-const { lengthConverter, weightConverter } = require("./converter");
+const { lengthConverter, weightConverter, temperatureConverter } = require("./converter");
 
 const routes = [
     {
@@ -14,7 +14,7 @@ const routes = [
     {
         method: 'POST',
         path: '/temperature',
-        handler: () => {}
+        handler: temperatureConverter,
     }
 ];
 
