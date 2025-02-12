@@ -1,10 +1,10 @@
 const { lengthConversion, weightConversion } = require("./database");
 
 const lengthConverter = async(request, h) => {
-    const { valueLength, convertFrom, convertTo } = request.payload;
-
+    const { valueLength, convertFromLength, convertToLength } = request.payload;
+    
     try {
-        if(!valueLength || !convertFrom || !convertTo) {
+        if(!valueLength || !convertFromLength || !convertToLength) {
             const response = h.response({
                 status: 'fail',
                 message: 'error, isi semua nilai',
@@ -13,7 +13,7 @@ const lengthConverter = async(request, h) => {
             return response;
         };
 
-        if(typeof valueLength !== 'number' || typeof convertFrom !== 'string' || typeof convertTo !== 'string') {
+        if(typeof valueLength !== 'number' || typeof convertFromLength !== 'string' || typeof convertToLength !== 'string') {
             const response = h.response({
                 status: 'fail',
                 message: 'input tidak valid, masukkan data dengan benar',
@@ -22,21 +22,24 @@ const lengthConverter = async(request, h) => {
             return response;
         };
 
-        if(convertFrom === convertTo) {
+        let rounding = Math.round(valueLength * 100) / 100;
+
+        if(convertFromLength === convertToLength) {
             const response = h.response({
                 status: 'success',
-                result: `${valueLength} ${convertFrom}`,
+                result: `${rounding} ${convertFromLength}`,
             });
             response.code(200);
             return response;
         };
         
-        const convertMm = valueLength * lengthConversion[convertFrom];
-        const result = convertMm / lengthConversion[convertTo];
+        const convertMm = rounding * lengthConversion[convertFromLength];
+        let result = convertMm / lengthConversion[convertToLength];
+        result = Math.round(result * 100) / 100;
 
         const response = h.response({
             status: 'success',
-            result: `${result} ${convertTo}`,
+            result: `${result} ${convertToLength}`,
         });
         response.code(200);
         return response;
@@ -52,10 +55,10 @@ const lengthConverter = async(request, h) => {
 };
 
 const weightConverter = async(request, h) => {
-    const { valueWeight, convertFrom, convertTo } = request.payload;
+    const { valueWeight, convertFromWeight, convertToWeight } = request.payload;
 
     try {
-        if(!valueWeight || !convertFrom || !convertTo) {
+        if(!valueWeight || !convertFromWeight || !convertToWeight) {
             const response = h.response({
                 status: 'fail',
                 message: 'error, isi semua nilai',
@@ -64,7 +67,7 @@ const weightConverter = async(request, h) => {
             return response;
         };
 
-        if(typeof valueWeight !== 'number' || typeof convertFrom !== 'string' || typeof convertTo !== 'string') {
+        if(typeof valueWeight !== 'number' || typeof convertFromWeight !== 'string' || typeof convertToWeight !== 'string') {
             const response = h.response({
                 status: 'fail',
                 message: 'input tidak valid, masukkan data dengan benar',
@@ -73,21 +76,24 @@ const weightConverter = async(request, h) => {
             return response;
         };
 
-        if(convertFrom === convertTo) {
+        let rounding = Math.round(valueWeight * 100) / 100;
+
+        if(convertFromWeight === convertToWeight) {
             const response = h.response({
                 status: 'success',
-                result: `${valueWeight} ${convertFrom}`,
+                result: `${rounding} ${convertFromWeight}`,
             });
             response.code(200);
             return response;
         };
 
-        const convertMg = valueWeight * weightConversion[convertFrom];
-        const result = convertMg / weightConversion[convertTo];
+        const convertMg = rounding * weightConversion[convertFromWeight];
+        let result = convertMg / weightConversion[convertToWeight];
+        result = Math.round(result * 100) / 100;
 
         const response = h.response({
             status: 'success',
-            result: `${result} ${convertTo}`,
+            result: `${result} ${convertToWeight}`,
         });
         response.code(200);
         return response;
@@ -103,11 +109,11 @@ const weightConverter = async(request, h) => {
 };
 
 const temperatureConverter = async(request, h) => {
-    const { valueTemperature, convertFrom, convertTo } = request.payload;
+    const { valueTemperature, convertFromTemperature, convertToTemperature } = request.payload;
     let result;
 
     try {
-        if(!valueTemperature || !convertFrom || !convertTo) {
+        if(!valueTemperature || !convertFromTemperature || !convertToTemperature) {
             const response = h.response({
                 status: 'fail',
                 message: 'error, isi semua nilai',
@@ -116,7 +122,7 @@ const temperatureConverter = async(request, h) => {
             return response;
         };
 
-        if(typeof valueTemperature !== 'number' || typeof convertFrom !== 'string' || typeof convertTo !== 'string') {
+        if(typeof valueTemperature !== 'number' || typeof convertFromTemperature !== 'string' || typeof convertToTemperature !== 'string') {
             const response = h.response({
                 status: 'fail',
                 message: 'input tidak valid, masukkan data dengan benar',
@@ -125,16 +131,18 @@ const temperatureConverter = async(request, h) => {
             return response;
         };
 
-        if(convertFrom === convertTo) {
+        let rounding = Math.round(valueTemperature * 100) / 100;
+
+        if(convertFromTemperature === convertToTemperature) {
             const response = h.response({
                 status: 'success',
-                result: `${valueTemperature} ${convertFrom}`,
+                result: `${rounding} ${convertFromTemperature}`,
             });
             response.code(200);
             return response;
         };
 
-        switch(convertFrom) {
+        switch(convertFromTemperature) {
             case 'Celsius':
                 result = valueTemperature;
                 break;
@@ -146,15 +154,17 @@ const temperatureConverter = async(request, h) => {
                 break;
         };
 
-        if(convertTo == 'Farenheit') {
+        if(convertToTemperature == 'Farenheit') {
             result = (result * (9/5)) + 32;
         } else if(convertTo == 'Kelvin') {
             result += 273.15;
         };
 
+        result = Math.round(result * 100) / 100;
+
         const response = h.response({
             status: 'success',
-            result: `${result} ${convertTo}`,
+            result: `${result} ${convertToTemperature}`,
         });
         response.code(200);
         return response;
